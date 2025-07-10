@@ -33,7 +33,7 @@ namespace TempOpBll.Models
         {
             string date = Date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
             string amount = Amount.ToString("-0.00", CultureInfo.InvariantCulture);
-            string label = Quantity.HasValue ? $"{Label} x{Quantity}" : Label;
+            string label = Quantity.HasValue ? $"{Label} ×{Quantity}" : Label;
             string memo = !string.IsNullOrWhiteSpace(Comment)
                 ? $"{Category} - {Comment}"
                 : Category;
