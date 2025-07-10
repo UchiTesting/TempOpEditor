@@ -25,9 +25,10 @@ namespace TempOpBll.Models
         }
 
         /// <summary>
-        /// Output operation details to QIF format
+        /// Converts this operation into a QIF (Quicken Interchange Format) string.
+        /// Suitable for exporting to finance management tools that support QIF format.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A multi-line string representing the operation in QIF format.</returns>
         public string ToQifString()
         {
             string date = Date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
