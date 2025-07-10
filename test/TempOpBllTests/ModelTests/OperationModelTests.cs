@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 using TempOpBll.Models;
@@ -118,7 +119,7 @@ MMisc:Pets
 
         [Theory]
         [MemberData(nameof(OperationToStringTestCases))]
-        public void ToStringShallExportQifCompatibleLine(Operation operation, string expectedOutput)
+        public void ToQifString_ShouldReturnQifFormattedOutput(Operation operation, string expectedOutput)
         {
             //Arrange - n/a
 
@@ -128,5 +129,27 @@ MMisc:Pets
             //Assert
             Assert.Equal(expectedOutput, output);
         }
+
+        [Fact]
+        public void ToQifString_ShouldUseInvariantCulture_ForAmountFormatting()
+        {
+            var originalCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+
+            var op = new Operation
+            {
+                Date = new DateTime(2023, 10, 7),
+                Amount = 123.45m,
+                Label = "Test",
+                Category = "Test",
+            };
+
+            string result = op.ToQifString();
+
+            Assert.Contains("T-123.45", result);
+
+            Thread.CurrentThread.CurrentCulture = originalCulture;
+        }
+
     }
 }
