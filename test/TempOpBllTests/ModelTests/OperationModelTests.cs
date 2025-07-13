@@ -1,6 +1,6 @@
 using System.Globalization;
-using System.Reflection.Emit;
-using System.Xml.Linq;
+using TempOpBll.Exporters;
+using TempOpBll.Interfaces;
 using TempOpBll.Models;
 
 namespace TempOpBllTests.ModelTests
@@ -122,9 +122,10 @@ MMisc:Pets
         public void ToQifString_ShouldReturnQifFormattedOutput(Operation operation, string expectedOutput)
         {
             //Arrange - n/a
+            IExporter<Operation> exporter = new QifExporter();
 
             //Act
-            string output = operation.ToQifString();
+            string output = exporter.Export(operation);
 
             //Assert
             Assert.Equal(expectedOutput, output);
@@ -133,6 +134,7 @@ MMisc:Pets
         [Fact]
         public void ToQifString_ShouldUseInvariantCulture_ForAmountFormatting()
         {
+            // Arrange
             var originalCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
 
@@ -144,8 +146,12 @@ MMisc:Pets
                 Category = "Test",
             };
 
-            string result = op.ToQifString();
+            IExporter<Operation> exporter = new QifExporter();
 
+            // Act
+            string result = exporter.Export(op);
+
+            // Assert
             Assert.Contains("T-123.45", result);
 
             Thread.CurrentThread.CurrentCulture = originalCulture;
